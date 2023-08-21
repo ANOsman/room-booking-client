@@ -12,6 +12,7 @@ import { RoomDetailComponent } from './components/admin/rooms/room-detail/room-d
 import { UserDetailComponent } from './components/admin/users/user-detail/user-detail.component';
 import { UserEditComponent } from './components/admin/users/user-edit/user-edit.component';
 import { RoomEditComponent } from './components/admin/rooms/room-edit/room-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 const routes: Routes = [
@@ -47,6 +48,7 @@ const routes: Routes = [
     RoomEditComponent
   ],
   imports: [
+    ReactiveFormsModule,
     RouterModule,
     BrowserModule,
     RouterModule.forRoot(routes),

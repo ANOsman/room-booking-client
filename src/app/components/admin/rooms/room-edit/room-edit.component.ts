@@ -12,9 +12,11 @@ import { DataService } from 'src/app/services/data.service';
 export class RoomEditComponent implements OnInit {
 
   room!: Room;
-  layouts = Object.values(Layout);
+  layoutsVal = Object.values(Layout);
+  layouts: Layout[]  = [];
   roomForm!: FormGroup;
   layoutCapacities!: LayoutCapacity[];
+temp: any;
 
   constructor(private dataService: DataService, private route: ActivatedRoute,
                 private formBuilder: FormBuilder) {}
@@ -25,14 +27,20 @@ export class RoomEditComponent implements OnInit {
     });
 
     this.roomForm = this.formBuilder.group(
-      {
+    {
         roomName: [this.room.name],
         location: [this.room.location],
         layoutCapacities: [this.room.layoutCapacities]
-      },
-    );
+    });
+
+  for (const lay of this.layoutsVal) {
+    const layoutCapacity = this.room.layoutCapacities.find ( lc => lc.layout === lay as Layout)!;
+    //const initialCapacity = layoutCapacity == null ? 0 : layoutCapacity.capacity;
+    if(layoutCapacity) 
+      this.layouts.push(layoutCapacity.layout);
+      this.roomForm.addControl(`layout${layoutCapacity?.layout}`, this.formBuilder.control(layoutCapacity?.capacity));
+    }
   }
 
- 
-
 }
+
