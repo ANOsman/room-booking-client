@@ -1,0 +1,24 @@
+<h1>Edit Room {{room.name}}</h1>
+
+<form>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="room name" formControlName="roomName">
+    <div class="alert alert-danger"></div>
+
+  </div>
+  <div class="form-group">
+    <label for="location">Location</label>
+    <input type="text" class="form-control" id="location" placeholder="location" formControlName="location">
+    <div class="alert alert-danger"></div>
+  </div>
+
+  <h2>This room can accomodate:</h2>
+
+  <!-- list the layout types here -->
+  <div class="form-group" *ngFor="let layout of layouts">
+    <label for="layout{{layout}}">{{layout}}</label>
+    <input type="number" class="form-control">
+   </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
