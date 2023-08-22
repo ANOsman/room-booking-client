@@ -18,13 +18,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 const routes: Routes = [
   { path: 'admin/users', component: UsersComponent,
     children: [
-      { path: 'detail/:user_id', component: UserDetailComponent },
+      { path: 'view/:user_id', component: UserDetailComponent },
       { path: 'edit/:user_id', component: UserEditComponent }
     ]
   },
   { path: 'admin/rooms', component: RoomsComponent,
     children: [
-      { path: 'detail/:room_id', component: RoomDetailComponent },
+      { path: 'edit', component: RoomEditComponent },
+      { path: 'view/:room_id', component: RoomDetailComponent },
       { path: 'edit/:room_id', component: RoomEditComponent }
 
     ]

@@ -10,13 +10,13 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class UserDetailComponent implements OnInit {
 
-  user!: User;
+  user?: User;
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.user = this.dataService.user(params['user_id'])!;
+      this.user = this.dataService.user(+params['user_id'])!;
     });
   }
 

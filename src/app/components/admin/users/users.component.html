@@ -1,6 +1,6 @@
 <div class="container">
   <h1>Users Admin</h1>
-  <a class="btn btn-warning mb-3">add</a>
+  <a class="btn btn-warning mb-3" [routerLink]="['/admin', 'users','edit']" (click)="addUser(user)">add</a>
   <div class="row">
     <div class="col-6">
       <table class="table">
@@ -15,7 +15,7 @@
         <tr *ngFor="let user of users" #user> <!-- repeat this tr for each user -->
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
-          <td><button type="button" class="btn btn-primary" [routerLink]="['detail', user.id]">view</button></td>
+          <td><button type="button" class="btn btn-primary" [routerLink]="['view', user.id]">view</button></td>
         </tr>
         </tbody>
       </table>

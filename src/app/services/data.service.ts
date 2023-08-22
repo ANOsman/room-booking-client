@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Layout, LayoutCapacity, Room } from '../model/room';
 import { User } from '../model/user';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +46,14 @@ export class DataService {
     this.rooms.push(room1);
     this.rooms.push(room2);
 
-    const user1 = new User(1, 'Susan');
-    const user2 = new User(2, 'Matt');
+    const user1 = new User();
+    const user2 = new User();
+
+    user1.name = 'Susan';
+    user1.id = 1;
+
+    user2.name = 'Matt';
+    user2.id = 2;
 
     this.users.push(user1);
     this.users.push(user2);
@@ -61,7 +68,45 @@ export class DataService {
 
    user(id: number) {
     return this.users.find(u => {
-      return u.id === +id;
+      return u.id === id;
     })
    }
+
+   updateRoom(room: Room) : Observable<Room> {
+    const originalRoom = this.rooms.find ( r => r.id === room.id);
+    if(originalRoom !== undefined) {
+      originalRoom.name = room.name;
+      originalRoom.location = room.location;
+      originalRoom.layoutCapacities = room.layoutCapacities;
+      return of(originalRoom)
+    }
+    return of(new Room());
+  }
+
+  deleteRoom(id: number) : Observable<any> {
+    const room = this.rooms.find(r => r.id === id);
+    if(room)
+      this.rooms.splice(this.rooms.indexOf(room),1);
+    return of(null);
+  }
+
+  deleteUser(id: number) : Observable<any> {
+    const room = this.rooms.find(r => r.id === id);
+    if(room)
+      this.rooms.splice(this.rooms.indexOf(room), 1);
+    return of(null);
+  }
+
+  resetUserPassword(id: number) {
+    return of(null);
+  }
+
+  addUser() {
+
+  }
+
+  updateUser() {
+
+  }
+
 }

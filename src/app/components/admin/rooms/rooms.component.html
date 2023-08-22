@@ -2,7 +2,7 @@
 <div class="container">
   <h1>Rooms Admin</h1>
 
-  <a class="btn btn-warning mb-3">add</a>
+  <a class="btn btn-warning mb-3" [routerLink]="['/admin', 'rooms', 'edit']" (click)="addRoom(room)">add</a>
     <div class="row">
       <div class="col-6">
         <table class="table">
@@ -18,7 +18,7 @@
               <td>{{room.id}}</td>
               <td>{{room.name}}</td>
               <td>
-                <button type="button" class="btn btn-primary"  [routerLink]="['detail', room.id]">view</button>
+                <button type="button" class="btn btn-primary"  [routerLink]="['view', room.id]">view</button>
               </td>
             </tr>
           </tbody>
