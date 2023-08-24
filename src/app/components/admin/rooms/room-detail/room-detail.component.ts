@@ -23,7 +23,7 @@ export class RoomDetailComponent implements OnInit {
   }
 
   deleteRoom(id: number) {
-    this.dataService.deleteUser(id);
+    this.dataService.deleteRoom(id);
     this.router.navigate(['/admin', 'rooms']);
   }
 }

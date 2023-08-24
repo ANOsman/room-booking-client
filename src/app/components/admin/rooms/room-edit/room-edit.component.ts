@@ -12,22 +12,15 @@ import { FormResetService } from 'src/app/services/form-reset.service';
   templateUrl: './room-edit.component.html',
   styleUrls: ['./room-edit.component.css']
 })
-export class RoomEditComponent implements OnInit, OnDestroy {
+export class RoomEditComponent implements OnInit {
 
   room!: Room;
   layoutsVal = Object.values(Layout);
-  layouts = Object.keys(Layout);
   roomForm!: FormGroup;
-  resetEventSubscription!: Subscription;
 
   constructor(private dataService: DataService, private route: ActivatedRoute,
                 private formBuilder: FormBuilder, private router: Router,
                 private formResetService: FormResetService) {
-
-
-  }
-  ngOnDestroy(): void {
-    this.resetEventSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -35,12 +28,6 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       this.room = this.dataService.room(+params['room_id'])!;
     });
     this.initializeForm();
-    this.resetEventSubscription = this.formResetService.resetRoomFormEvent.subscribe(
-      room => {
-        this.room = room;
-        this.initializeForm();
-      }
-    );
   }
 
   initializeForm() {
@@ -57,8 +44,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
       this.roomForm = this.formBuilder.group(
         {
             roomName: [this.room.name],
-            location: [this.room.location],
-            layoutCapacities: [this.room.layoutCapacities]
+            location: [this.room.location]
         });
       for (const layout of this.layoutsVal) {
 
@@ -70,7 +56,6 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.room = new Room();
     this.room.name = this.roomForm.value['roomName'];
     this.room.location = this.roomForm.value['location'];
     this.room.layoutCapacities = new Array<LayoutCapacity>();
@@ -88,7 +73,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
 
     this.dataService.updateRoom(this.room).subscribe(
         next => {
-            this.router.navigateByUrl(`/admin/rooms/view/${next.id}`)
+            this.router.navigateByUrl('/admin/rooms/view/' + next.id)
           });
   }
 }

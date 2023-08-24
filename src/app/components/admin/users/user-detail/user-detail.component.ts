@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { User } from 'src/app/model/user';
 import { DataService } from 'src/app/services/data.service';
 
@@ -12,7 +12,8 @@ export class UserDetailComponent implements OnInit {
 
   user?: User;
 
-  constructor(private route: ActivatedRoute, private dataService: DataService) {}
+  constructor(private route: ActivatedRoute, private dataService: DataService,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -20,4 +21,8 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
+  deleteUser(id:number) {
+    this.dataService.deleteUser(id).subscribe(resp =>
+      this.router.navigate(['/admin', 'users']));
+  }
 }

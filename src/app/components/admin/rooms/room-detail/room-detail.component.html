@@ -1,6 +1,6 @@
 <div class="roomDetails" *ngIf="room">
   <h2>Room details</h2>
-  <a class="btn btn-small btn-warning" role="button" [routerLink]="['/admin', 'rooms', 'edit', room.id]">edit</a>
+  <a class="btn btn-small btn-warning" [routerLink]="['/admin','rooms','edit',room.id]">edit</a>
   <a class="btn btn-small btn-warning" (click)="deleteRoom(room.id)">delete</a>
   <table>
     <tr>

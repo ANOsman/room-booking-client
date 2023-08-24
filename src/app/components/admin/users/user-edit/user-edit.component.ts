@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/model/user';
 import { DataService } from 'src/app/services/data.service';
@@ -11,59 +11,41 @@ import { FormResetService } from 'src/app/services/form-reset.service';
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css']
 })
-export class UserEditComponent implements OnInit, OnDestroy {
+export class UserEditComponent implements OnInit {
 
 
   user!: User;
   userForm!: FormGroup;
-  resetEventSubscription!: Subscription;
+  password!: string;
 
   constructor(private route: ActivatedRoute, private dataService: DataService,
-                private formBuilder: FormBuilder, private formResetService: FormResetService) {
+                private formBuilder: FormBuilder, private router: Router) {
 
-    this.userForm = this.formBuilder.group(
-      {
-        name: ['', Validators.required],
-        id: ['', Validators.required]
 
-      }
-    )
   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.user = this.dataService.user(+params['user_id'])!;
     });
-    this.initializeForm();
-    this.resetEventSubscription = this.formResetService.resetUserFormEvent.subscribe(
-      user => {
-        this.user = user;
-        this.initializeForm();
+
+    this.userForm = this.formBuilder.group(
+      {
+        name: [this.user.name, Validators.required],
+        id: [this.user.id, Validators.required]
+
       }
     )
+
   }
 
-  ngOnDestroy(): void {
-      this.resetEventSubscription.unsubscribe();
+  save() {
+    this.user.name = this.userForm.value['name'];
+    this.dataService.updateUser(this.user).subscribe(
+      next => {
+        this.router.navigateByUrl(`/admin/users/view/${next.id}`)
+      }
+    );
   }
-
-  initializeForm() {
-    if(this.user?.id == null) {
-      this.userForm = this.formBuilder.group(
-        {
-          name: [''],
-          id: ['']
-        }
-      );
-    }
-    else {
-      this.userForm = this.formBuilder.group(
-        {
-          name: [this.user.name],
-          id: [this.user.id]
-        }
-      );
-    }
-  }
-
 }
+
