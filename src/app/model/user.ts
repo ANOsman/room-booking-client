@@ -4,4 +4,11 @@ export class User {
 
   constructor() {
   }
+
+  static fromJson(o:User) : User {
+    let user = new User();
+    user.id = o.id;
+    user.name = o.name;
+    return user;
+  }
 }

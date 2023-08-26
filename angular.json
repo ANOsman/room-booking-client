@@ -33,6 +33,14 @@
             ]
           },
           "configurations": {
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/services/data.service.ts",
+                  "with": "src/app/services/data.service.local.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -73,6 +81,9 @@
             },
             "development": {
               "browserTarget": "RoomBookingClient:build:development"
+            },
+            "local": {
+              "browserTarget": "RoomBookingClient:build:local"
             }
           },
           "defaultConfiguration": "development"

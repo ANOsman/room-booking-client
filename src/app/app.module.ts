@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoomNewComponent } from './components/admin/rooms/room-new/room-new.component';
 import { UserNewComponent } from './components/admin/users/user-new/user-new.component';
 import { EditBookingComponent } from './components/calendar/edit-booking/edit-booking.component';
-
+import { HttpClientModule } from '@angular/common/http'
 
 
 const routes: Routes = [
@@ -64,6 +64,7 @@ const routes: Routes = [
     RouterModule,
     BrowserModule,
     RouterModule.forRoot(routes),
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent],
