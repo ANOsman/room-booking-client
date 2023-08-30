@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -18,32 +18,42 @@ export class UserEditComponent implements OnInit {
   userForm!: FormGroup;
   password!: string;
 
-  constructor(private route: ActivatedRoute, private dataService: DataService,
-                private formBuilder: FormBuilder, private router: Router) {
+  @Output()
+  dataChangedEvent = new EventEmitter<boolean>();
 
+  constructor(private route: ActivatedRoute, private dataService: DataService,
+                private formBuilder: FormBuilder, private router: Router, private formResetService: FormResetService) {
+        
+                  this.userForm = this.formBuilder.group(
+                    {
+                      name: ['', Validators.required],
+                      id: ['', Validators.required]
+              
+                    }
+                  )
 
   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.user = this.dataService.user(+params['user_id'])!;
+      if(params['user_id']) {
+        this.dataService.getUser(+params['user_id']).subscribe(data => {
+          this.user = data;
+          this.userForm.setValue(data);
+      });
+    }
     });
 
-    this.userForm = this.formBuilder.group(
-      {
-        name: [this.user.name, Validators.required],
-        id: [this.user.id, Validators.required]
-
-      }
-    )
 
   }
 
   save() {
-    this.user.name = this.userForm.value['name'];
+    this.user.name = this.userForm.get('name')?.value;
     this.dataService.updateUser(this.user).subscribe(
       next => {
-        this.router.navigateByUrl(`/admin/users/view/${next.id}`)
+        //this.dataChangedEvent.emit(true);
+        this.formResetService.dataChangedEvent.emit(this.user);
+        this.router.navigateByUrl(`/admin/users/view/${this.user.id}`)
       }
     );
   }

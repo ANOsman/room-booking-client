@@ -14,68 +14,47 @@ import { FormResetService } from 'src/app/services/form-reset.service';
 })
 export class RoomEditComponent implements OnInit {
 
-  room!: Room;
-  layoutsVal = Object.values(Layout);
-  roomForm!: FormGroup;
-
-  constructor(private dataService: DataService, private route: ActivatedRoute,
-                private formBuilder: FormBuilder, private router: Router,
-                private formResetService: FormResetService) {
-  }
-
-  ngOnInit(): void {
-    this.route.params.subscribe((params: Params) => {
-      //this.room = this.dataService.room(+params['room_id'])!;
-    });
-    this.initializeForm();
-  }
-
-  initializeForm() {
-    if(this.room?.id == null) {
-      this.roomForm = this.formBuilder.group(
-        {
-            roomName: [''],
-            location: ['']
-        });
-      for (const layout of this.layoutsVal)
-        this.roomForm.addControl(`layout${layout}`, this.formBuilder.control(0));
-    }
-    else {
-      this.roomForm = this.formBuilder.group(
-        {
-            roomName: [this.room.name],
-            location: [this.room.location]
-        });
-      for (const layout of this.layoutsVal) {
-
-        const layoutCapacity = this.room.layoutCapacities.find ( lc => lc.layout === layout as Layout)!;
-        const initialCapacity = layoutCapacity == null ? 0 : layoutCapacity.capacity;
-        this.roomForm.addControl(`layout${layout}`, this.formBuilder.control(initialCapacity));
-        }
-      }
-  }
-
-  onSubmit() {
-    this.room.name = this.roomForm.value['roomName'];
-    this.room.location = this.roomForm.value['location'];
-    this.room.layoutCapacities = new Array<LayoutCapacity>();
-
-    for(let layout of this.layoutsVal) {
-      const capacity = this.roomForm.value[`layout${layout}`];
-      const lay = layout as Layout;
-      const layoutCapacity = new LayoutCapacity();
-      if(capacity !== 0) {
-        layoutCapacity.capacity = capacity;
-        layoutCapacity.layout = lay;
-        this.room.layoutCapacities.push(layoutCapacity);
-      }
-    }
-
-    this.dataService.updateRoom(this.room).subscribe(
-        next => {
-            this.router.navigateByUrl('/admin/rooms/view/' + next.id)
+    room!: Room;
+    roomForm!: FormGroup;
+    
+    constructor(private dataService: DataService, private route: ActivatedRoute,
+      private formBuilder: FormBuilder) {
+        this.roomForm = this.formBuilder.group(
+          {
+              roomName: [''],
+              location: [''],
+              theaterCapacity: [''],
+              uShapeCapacity: [''],
+              boardCapacity: ['']
           });
-  }
+      
+    }
+
+    ngOnInit(): void {
+      this.route.params.subscribe((params: Params) => {
+        this.dataService.getRoom(+params['room_id']).subscribe(data => {
+          this.room = data;
+          this.initForm();
+        });
+      });
+    }
+
+    initForm() {
+      if(this.room) {
+        this.roomForm.get('roomName')?.setValue(this.room.name);
+        this.roomForm.get('location')?.setValue(this.room.location);
+        this.roomForm.get('theaterCapacity')?.setValue(this.room.layoutCapacities[0].capacity);
+        this.roomForm.get('uShapeCapacity')?.setValue(this.room.layoutCapacities[1].capacity);
+        this.roomForm.get('boardCapacity')?.setValue(this.room.layoutCapacities[2].capacity);
+
+      }
+    }
+
+    onSubmit() {
+      
+    }
+
+ 
 }
 
 

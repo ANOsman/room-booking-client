@@ -15,8 +15,8 @@
   </table>
   <h4>This room can accomodate:</h4>
   <table>
-    <tr *ngFor="let lc of room.layoutCapacities"> <!-- repeat the tr for each capacity -->
-      <td>{{lc.layout}}</td><td>{{lc.capacity}}</td>
+    <tr *ngFor="let lc of room.layoutCapacities; let i = index"> <!-- repeat the tr for each capacity -->
+      <td *ngIf="room.layoutCapacities[i].capacity !== 0">{{layoutValues[i]}}</td><td *ngIf="room.layoutCapacities[i].capacity !== 0">{{lc.capacity}}</td>
     </tr>
   </table>
 </div>

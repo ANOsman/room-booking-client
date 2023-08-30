@@ -12,3 +12,9 @@ export class User {
     return user;
   }
 }
+
+export interface Users {
+  _embedded: {
+    users: User[];
+  }
+}

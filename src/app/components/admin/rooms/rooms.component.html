@@ -24,6 +24,7 @@
           </tbody>
         </table>
       </div>
+      <div *ngIf="loadingData">{{message}}</div>
       <div class="col-6">
         <!-- room detail will go here -->
         <router-outlet></router-outlet>

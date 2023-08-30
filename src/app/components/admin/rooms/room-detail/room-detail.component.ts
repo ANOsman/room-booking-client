@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Room } from 'src/app/model/room';
+import { Layout, Room } from 'src/app/model/room';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -11,6 +11,7 @@ import { DataService } from 'src/app/services/data.service';
 export class RoomDetailComponent implements OnInit {
 
   room!: Room;
+  layoutValues: any = Object.values(Layout);
 
   constructor(private dataService: DataService, private route: ActivatedRoute,
     private router: Router)
@@ -18,7 +19,13 @@ export class RoomDetailComponent implements OnInit {
 
   ngOnInit(): void {
      this.route.params.subscribe((params: Params) => {
-      //this.room = this.dataService.room(params['room_id'])!;
+      this.dataService.getRoom(+params['room_id']).subscribe(r => {
+        this.room = r;
+        for(let lc of this.room.layoutCapacities) {
+          this.layoutValues.push(lc.layout);
+        }
+      });
+        
     })
   }
 

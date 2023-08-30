@@ -9,6 +9,7 @@ export class FormResetService {
 
   resetRoomFormEvent = new EventEmitter<Room>();
   resetUserFormEvent = new EventEmitter<User>();
+  dataChangedEvent = new EventEmitter<User>();
 
   constructor() { }
 }

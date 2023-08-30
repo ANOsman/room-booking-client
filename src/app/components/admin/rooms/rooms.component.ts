@@ -13,14 +13,32 @@ export class RoomsComponent implements OnInit{
 
   rooms!: Array<Room>;
   room = new Room();
+  loadingData = true;
+  message = 'Please wait... getting the list of rooms'
+  reloadAttempts = 0;
 
   constructor(private dataService: DataService,
           private formResetService: FormResetService, private router: Router) {}
 
-  ngOnInit(): void {
+  
+  loadData() {
     this.dataService.getRooms().subscribe(
-      (next) => this.rooms = next
+      (next) => {
+        this.rooms = next;
+        this.loadingData = false;
+      }, (error) => {
+        this.reloadAttempts++;
+        if(this.reloadAttempts <= 0) {
+          this.loadData();
+        }
+        else {
+          this.message = 'Sorry - something went wrong, please contact support'
+        }
+      }
     );
+  }
+  ngOnInit(): void {
+   this.loadData();
     //this.addRoom();
   }
 

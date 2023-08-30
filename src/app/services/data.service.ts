@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Layout, LayoutCapacity, Room } from '../model/room';
-import { User } from '../model/user';
+import { Layout, LayoutCapacity, Room, Rooms } from '../model/room';
+import { User, Users } from '../model/user';
 import { Observable, map, of } from 'rxjs';
 import { Booking } from '../model/booking';
 import { formatDate } from '@angular/common';
@@ -21,16 +21,33 @@ export class DataService {
     return new User();
    }
 
-   room(id: number) {
-    return new Room();
+   getRoom(id: number) : Observable<Room> {
+    return this.http.get<Room>(environment.restUrl + '/rooms/' + id)
+    .pipe(map(data => {
+      return Room.fromJson(data)
+    }));
    }
 
    getUsers() : Observable<User[]>{
-    return of(new Array<User>());
+    return this.http.get<Users>(environment.restUrl + '/users').pipe(map (data=>{
+      const users = new Array<User>();
+      for(let user of data._embedded.users) {
+        users.push(User.fromJson(user));
+      }
+      return users;
+    }))
    }
 
    getRooms() : Observable<Room[]> {
-    return of(new Array<Room>());
+    return this.http.get<Rooms>(environment.restUrl + '/rooms')
+    .pipe(map(data => {
+      const rooms = new Array<Room>();
+      for(const room of data._embedded.rooms) {
+        rooms.push(Room.fromJson(room));
+      }
+      return rooms;
+    }))
+
    }
 
    updateRoom(room: Room) : Observable<Room> {
@@ -62,8 +79,10 @@ export class DataService {
   }
 
   updateUser(user: User) : Observable<User> {
-
-    return of(new User());
+    return this.http.put<User>(environment.restUrl + `/users/${user.id}`, user)
+    .pipe(map(data => {
+      return User.fromJson(data)
+    }));
   }
 
   getBookings(date: string) : Observable<Booking[]> {
@@ -88,7 +107,7 @@ export class DataService {
   }
 
   getUser(id: number) : Observable<User> {
-     return this.http.get<User>(environment.restUrl + '/data-api/users/' + id)
+     return this.http.get<User>(environment.restUrl + '/users/' + id)
      .pipe( map( data => {
       return User.fromJson(data)
      }));
