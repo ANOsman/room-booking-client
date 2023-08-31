@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Room } from 'src/app/model/room';
+import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormResetService } from 'src/app/services/form-reset.service';
 
@@ -18,7 +19,8 @@ export class RoomsComponent implements OnInit{
   reloadAttempts = 0;
 
   constructor(private dataService: DataService,
-          private formResetService: FormResetService, private router: Router) {}
+          private formResetService: FormResetService, private router: Router,
+          private dataChangeService: DataChangeService) {}
 
   
   loadData() {
@@ -39,7 +41,9 @@ export class RoomsComponent implements OnInit{
   }
   ngOnInit(): void {
    this.loadData();
-    //this.addRoom();
+   this.dataChangeService.roomDataChangedEvent.subscribe(next => {
+    this.loadData();
+   })
   }
 
   addRoom() {

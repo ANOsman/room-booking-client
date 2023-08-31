@@ -1,22 +1,27 @@
-<form [formGroup]="userForm" (ngSubmit)="save()">
+<div class="p-5 bg-warning" *ngIf="message">{{message}}</div>
+<form [formGroup]="userForm" (ngSubmit)="saveUser()">
 
   <div class="form-group">
     <label for="name">Name</label>
     <input type="text" class="form-control" id="name" placeholder="user name"
       formControlName="name">
-    <div class="alert alert-danger" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.dirty
-           && userForm.get('name')?.touched">
+    <div class="alert alert-danger" *ngIf="userForm.get('name')?.invalid && (userForm.get('name')?.dirty
+           || userForm.get('name')?.touched)">
       User name is required</div>
 
   </div>
 
   <div class="form-group"> <!-- only show this field on adding a user -->
     <label for="password">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="password"
-           formControlName="password">
-    <div class="alert alert-danger" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.dirty
-          && userForm.get('password')?.touched">Password cannot be blank</div>
-  </div>
+    <input type="password" class="form-control" id="password" placeholder="password" name="password" formControlName="password" required>
+    <div class="alert alert-danger" *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty 
+      || userForm.get('password')?.touched)">Passwords is required</div>
+    <div class="alert alert-danger" *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty
+    || userForm.get('password')?.touched)">Passwords cannot be blank</div>
 
-  <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Save</button>
+    <label for="password2">Repeat Password</label>
+    <input type="password" class="form-control" id="password2" placeholder="password" name="password2" formControlName="password2" required>
+    <div class="alert alert-danger" [hidden]="userForm.get('password')?.value === userForm.get('password2')?.value">The passwords must match</div>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
 </form>

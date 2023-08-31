@@ -18,21 +18,29 @@ export class Room {
 }
 
 export class LayoutCapacity {
+  id!: number;
   capacity!: number;
   layout!: Layout;
 
+  // setLayout(lay: Layout) {
+  //   this.layout = lay;
+  // }
+
   static fromJson(lc: LayoutCapacity) {
     const layoutCap = new LayoutCapacity();
+    layoutCap.id = lc.id;
     layoutCap.capacity = lc.capacity;
     layoutCap.layout = lc.layout;
     return layoutCap;
   }
 }
 
+
 export enum Layout {
   THEATER = 'Theater',
   USHAPE = 'U-Shape',
-  BOARD = 'Board Meeting'
+  BOARD = 'Board Meeting',
+  member = "member"
 }
 
 export interface Rooms {
@@ -44,8 +52,9 @@ export interface Rooms {
       location: string,
       layoutCapacities: [
       {
-        capacity: number,
+        id: number,
         layout: Layout,
+        capacity: number
       }]
     }]
     

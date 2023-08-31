@@ -1,8 +1,8 @@
 <h1>Edit User</h1>
 
-<!-- <div class="bg-warning p-5">warning message placeholder</div> -->
+<div class="bg-warning p-5" *ngIf="message">{{message}}</div>
 
-<form [formGroup]="userForm" (ngSubmit)="save()">
+<form [formGroup]="userForm" (ngSubmit)="updateUser()">
 
   <div class="form-group">
     <label for="name">Name</label>

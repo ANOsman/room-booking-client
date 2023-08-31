@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Room } from 'src/app/model/room';
 import { User } from 'src/app/model/user';
+import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormResetService } from 'src/app/services/form-reset.service';
 
@@ -16,12 +17,13 @@ export class UsersComponent implements OnInit {
   message = 'Loading data - please wait'
   loadingData = true;
 
-  constructor(private dataService: DataService, private formResetService: FormResetService) {
+  constructor(private dataService: DataService, private formResetService: FormResetService,
+               private dataChangeService: DataChangeService) {
   }
 
   ngOnInit(): void {
    this.loadData();
-   this.formResetService.dataChangedEvent.subscribe( next => {
+   this.dataChangeService.userDataChangedEvent.subscribe( next => {
     this.loadData();
    })
   }
@@ -36,11 +38,6 @@ export class UsersComponent implements OnInit {
         this.message = 'An error occured - please contact support!'
       }
     );
-  }
-
-  loadAgain(dataChanged: boolean) {
-      this.loadData();
-      console.log("Running load data")
   }
 
   addUser(user: User) {

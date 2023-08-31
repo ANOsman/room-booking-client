@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/model/user';
+import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormResetService } from 'src/app/services/form-reset.service';
 
@@ -17,12 +18,14 @@ export class UserEditComponent implements OnInit {
   user!: User;
   userForm!: FormGroup;
   password!: string;
+  message!: string
 
   @Output()
   dataChangedEvent = new EventEmitter<boolean>();
 
   constructor(private route: ActivatedRoute, private dataService: DataService,
-                private formBuilder: FormBuilder, private router: Router, private formResetService: FormResetService) {
+                private formBuilder: FormBuilder, private router: Router, 
+                private dataChangeService: DataChangeService) {
         
                   this.userForm = this.formBuilder.group(
                     {
@@ -47,13 +50,16 @@ export class UserEditComponent implements OnInit {
 
   }
 
-  save() {
+  updateUser() {
+    this.message = 'Saving...'
     this.user.name = this.userForm.get('name')?.value;
+   
     this.dataService.updateUser(this.user).subscribe(
       next => {
-        //this.dataChangedEvent.emit(true);
-        this.formResetService.dataChangedEvent.emit(this.user);
+        this.dataChangeService.userDataChangedEvent.emit(this.user);
         this.router.navigateByUrl(`/admin/users/view/${this.user.id}`)
+      }, error => {
+        this.message = 'Something went wrong and the data wasn\'t saved. You may want to try again.'
       }
     );
   }

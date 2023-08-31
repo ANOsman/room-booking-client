@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Layout, Room } from 'src/app/model/room';
+import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -12,9 +13,10 @@ export class RoomDetailComponent implements OnInit {
 
   room!: Room;
   layoutValues: any = Object.values(Layout);
+  message!: string
 
   constructor(private dataService: DataService, private route: ActivatedRoute,
-    private router: Router)
+    private router: Router, private dataChangeService: DataChangeService)
   {}
 
   ngOnInit(): void {
@@ -30,7 +32,14 @@ export class RoomDetailComponent implements OnInit {
   }
 
   deleteRoom(id: number) {
-    this.dataService.deleteRoom(id);
+    this.dataService.deleteRoom(id).subscribe( 
+      next => {
+        this.dataChangeService.roomDataChangedEvent.emit();
+    },
+      error => {
+        this.message = 'Sorry - this room cannot deleted at this time.'
+      }
+    );
     this.router.navigate(['/admin', 'rooms']);
   }
 }
