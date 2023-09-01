@@ -30,18 +30,15 @@ export class RoomsComponent implements OnInit{
         this.loadingData = false;
       }, (error) => {
         this.reloadAttempts++;
-        if(this.reloadAttempts <= 0) {
+        if(this.reloadAttempts <= 10)
           this.loadData();
-        }
         else {
-          this.message = 'Sorry - something went wrong, please contact support'
-        }
-      }
-    );
+          this.message = 'Sorry - something went wrong, please contact support'}
+    });
   }
   ngOnInit(): void {
    this.loadData();
-   this.dataChangeService.roomDataChangedEvent.subscribe(next => {
+   this.dataChangeService.roomDataChangedEvent.subscribe(next =>{
     this.loadData();
    })
   }

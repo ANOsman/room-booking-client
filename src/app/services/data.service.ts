@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Layout, LayoutCapacity, Room, Rooms } from '../model/room';
 import { User, Users } from '../model/user';
 import { Observable, map, of } from 'rxjs';
-import { Booking } from '../model/booking';
+import { Booking, Bookings } from '../model/booking';
 import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -23,7 +23,7 @@ export class DataService {
 
    getRoom(id: number) : Observable<Room> {
     return this.http.get<Room>(environment.restUrl + '/rooms/' + id)
-    .pipe(map(data => {
+    .pipe(map(data =>{
       return Room.fromJson(data)
     }));
    }
@@ -39,13 +39,14 @@ export class DataService {
    }
 
    getRooms() : Observable<Room[]> {
-    return this.http.get<Rooms>(environment.restUrl + '/rooms')
+    return this.http.get<any>(environment.restUrl + '/rooms')
     .pipe(map(data => {
       const rooms = new Array<Room>();
       for(const room of data._embedded.rooms) {
         rooms.push(Room.fromJson(room));
       }
       return rooms;
+      
     }))
 
    }
@@ -55,22 +56,9 @@ export class DataService {
     .pipe(map(data => {
       return Room.fromJson(data)
     }));
-  }
+    }
 
   addRoom(newRoom: Room) : Observable<Room> {
-    // const correctedRoom = {name: newRoom.name, location: newRoom.location, capacities:[LayoutCapacity]};
-    // for(const lc of newRoom.layoutCapacities) {
-
-    //   let correctLayout;
-    //   for(let member in Layout) {
-    //     if(member === lc.layout) {
-    //       correctLayout = member;
-    //     }
-    //   }
-
-    //   const correctedLayout = {layout: correctLayout, capacity: lc.capacity, fromJson(){}}
-    //   correctedRoom.capacities.push(correctedLayout);
-    // }
     return this.http.post<Room>(`${environment.restUrl}/rooms`, newRoom)
     .pipe(map( data => {
       return Room.fromJson(data)
@@ -81,12 +69,12 @@ export class DataService {
     return this.http.delete<any>(`${environment.restUrl}/users/${id}`);
   }
 
-  deleteRoom(id: number) : Observable<any> {
-    return this.http.delete(`${environment.restUrl}/rooms/${id}`);
+  resetUserPassword(id: number) : Observable<any> {
+    return this.http.get(`${environment.url}/users/resetPassword/${id}`);
   }
 
-  resetUserPassword(id: number) {
-    return of(null);
+  deleteRoom(id: number) : Observable<any> {
+    return this.http.delete(`${environment.restUrl}/rooms/${id}`);
   }
 
   addUser(newUser: User, password: string) : Observable<User> {
@@ -102,12 +90,42 @@ export class DataService {
   }
 
   getBookings(date: string) : Observable<Booking[]> {
-    return of(new Array<Booking>());
+    return this.http.get<any>(`${environment.url}/bookings/${date}`)
+      .pipe(map( data => {
+        const bookings = new Array<Booking>();
+        for(const booking of data) {
+
+        let fullBooking = Booking.fromJson(booking);
+        this.getRoomWithBooking(booking.id).subscribe(data => fullBooking.room = data)
+        this.getUserWithBooking(booking.id).subscribe(data => fullBooking.user = data);
+          bookings.push(fullBooking)
+        }
+        return bookings;
+      }))
+  }
+
+  getRoomWithBooking(id: number) : Observable<Room>{
+    return this.http.get<Room>(`${environment.restUrl}/bookings/${id}/room`)
+      .pipe(map(data =>{
+        return Room.fromJson(data)
+      }))
+  }
+
+  getUserWithBooking(id: number) : Observable<User> {
+    return this.http.get<Room>(`${environment.restUrl}/bookings/${id}/user`)
+    .pipe(map(data =>{
+      return User.fromJson(data)
+    }))
   }
 
   getBooking(id: number) : Observable<Booking> {
-
-    return of(new Booking());
+    return this.http.get<Booking>(`${environment.restUrl}/bookings/${id}`)
+        .pipe(map( data => {
+          const fullBooking = Booking.fromJson(data)
+          this.getRoomWithBooking(data.id).subscribe(data => fullBooking.room = data);
+          this.getUserWithBooking(data.id).subscribe(data => fullBooking.user = data);
+          return fullBooking;
+        }))
   }
 
   saveBooking(booking: Booking) : Observable<Booking> {
@@ -119,14 +137,13 @@ export class DataService {
   }
 
   deleteBooking(id: number) : Observable<any> {
-    return of(null);
+    return this.http.delete(`${environment.restUrl}/bookings/${id}`);
   }
 
   getUser(id: number) : Observable<User> {
      return this.http.get<User>(environment.restUrl + '/users/' + id)
-     .pipe( map( data => {
+     .pipe( map( data =>{
       return User.fromJson(data)
      }));
   }
-
 }

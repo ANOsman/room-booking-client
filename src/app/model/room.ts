@@ -6,9 +6,9 @@ export class Room {
 
   static fromJson(o: Room) {
     const newRoom = new Room();
-    newRoom.id = o.id;
-    newRoom.name = o.name;
-    newRoom.location = o.location;
+    newRoom.id = o?.id;
+    newRoom.name = o?.name;
+    newRoom.location = o?.location;
     newRoom.layoutCapacities = new Array<LayoutCapacity>();
     for(const lc of o.layoutCapacities) {
       newRoom.layoutCapacities.push(LayoutCapacity.fromJson(lc));
@@ -28,9 +28,9 @@ export class LayoutCapacity {
 
   static fromJson(lc: LayoutCapacity) {
     const layoutCap = new LayoutCapacity();
-    layoutCap.id = lc.id;
-    layoutCap.capacity = lc.capacity;
-    layoutCap.layout = lc.layout;
+    layoutCap.id = lc?.id;
+    layoutCap.capacity = lc?.capacity;
+    layoutCap.layout = lc?.layout;
     return layoutCap;
   }
 }

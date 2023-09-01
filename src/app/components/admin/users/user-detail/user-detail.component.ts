@@ -26,9 +26,21 @@ export class UserDetailComponent implements OnInit {
   }
 
   deleteUser(id:number) {
+    this.message = 'Deleting...'
     this.dataService.deleteUser(id).subscribe(
       _resp => this.dataChange.userDataChangedEvent.emit(), 
-      _error => this.message = 'Sorry - this user can\'t deleted at this time.');
+      _error => { this.message = 'Sorry - this user can\'t deleted at this time.' + _error.message
+        console.log('Error message:', _error.status);
+    });
+      
       this.router.navigate(['/admin', 'users']);
+  }
+
+  resetUserPassword(id: number) {
+    this.message = 'Please wait...'
+    this.dataService.resetUserPassword(id).subscribe(
+      next => this.message = 'The password has been reset.',
+      error => this.message = 'Sorry, something went wrong.'
+    )
   }
 }
