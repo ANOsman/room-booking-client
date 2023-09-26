@@ -61,8 +61,6 @@ export class RoomEditComponent implements OnInit {
       this.room.layoutCapacities[1].capacity = this.roomForm.get('uShapeCapacity')?.value;
       this.room.layoutCapacities[2].capacity = this.roomForm.get('boardCapacity')?.value;
 
-      console.log('Updated room = ', this.room)
-
       this.dataService.updateRoom(this.room).subscribe(
         next => {
           this.dataChangeService.roomDataChangedEvent.emit();

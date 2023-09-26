@@ -39,10 +39,10 @@ export class RoomDetailComponent implements OnInit {
           this.dataChangeService.roomDataChangedEvent.emit();
       },
         error => {
-          this.message = 'Sorry - this room cannot deleted at this time.'
+          this.message = 'Sorry - this room cannot be deleted at this time.'
         }
       );
       this.router.navigate(['/admin', 'rooms']);
-    }
+     }
   }
 }

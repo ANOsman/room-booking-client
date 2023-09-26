@@ -128,12 +128,12 @@ export class DataService {
         }))
   }
 
-  saveBooking(booking: Booking) : Observable<Booking> {
-    return of(new Booking());
+  addBooking(newbooking: Booking) : Observable<Booking> {
+    return this.http.post<any>(`${environment.restUrl}/bookings`, newbooking)
   }
 
-  addBooking(newBooking: Booking) : Observable<Booking> {
-    return of(new Booking());
+  updateBooking(booking: Booking) : Observable<Booking> {
+    return this.http.put<any>(`${environment.restUrl}/bookings/${booking.id}`, booking)
   }
 
   deleteBooking(id: number) : Observable<any> {

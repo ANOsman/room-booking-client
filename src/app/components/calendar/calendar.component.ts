@@ -36,7 +36,6 @@ export class CalendarComponent implements OnInit {
           this.selectedDate = formatDate(new Date(), 'yyyy-MM-dd', 'en-ZA');
         this.dataService.getBookings(this.selectedDate).subscribe( data =>{ 
           this.bookings = data
-          console.log('Bookings: ', data)
           this.dataLoaded = true
           this.message = ''
         });  
@@ -46,7 +45,6 @@ export class CalendarComponent implements OnInit {
 
 
   dateChanged() {
-    console.log(this.selectedDate);
     this.router.navigate([''], {queryParams: {date: this.selectedDate}});
   }
 

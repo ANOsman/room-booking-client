@@ -67,6 +67,7 @@ export class RoomNewComponent implements OnInit {
       if(member === Layout.USHAPE)
         layout2.layout = member;
     }
+    // layout2.layout = 'USHAPE' as Layout
   
     this.room.layoutCapacities.push(layout2);
 
