@@ -1,32 +1,26 @@
 <h1>Edit Room</h1>
-<div class="bg-warning p-5" *ngIf="message">{{message}}</div>
-<form [formGroup]="roomForm" (ngSubmit)="updateRoom()">
-  <div class="form-group" >
-    <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="room name" formControlName="roomName">
-    <div class="alert alert-danger"></div>
-
+<form [formGroup]="roomForm!">
+  <div class="form-group">
+    <label for="first-name">Name: </label>
+    <input id="first-name" type="text" formControlName="name" class="form-control">
   </div>
   <div class="form-group">
-    <label for="location">Location</label>
-    <input type="text" class="form-control" id="location" placeholder="location" formControlName="location">
-    <div class="alert alert-danger"></div>
+    <label for="last-name">Location: </label>
+    <input id="last-name" type="text" formControlName="location" class="form-control">
   </div>
-
-  <h2>This room can accomodate:</h2>
-  <div class="form-group">
-    <label for="theater">Theater</label>
-    <input type="number" class="form-control" formControlName="theaterCapacity" id="theater">
+  <div formGroupName="layout">
+    <h2>This room can accomodate</h2>
+    <div class="form-group">
+      <label for="street">Theater: </label>
+      <input id="street" type="text" formControlName="theater" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="city">U-Shape: </label>
+      <input id="city" type="text" formControlName="uShape" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="state">Board Meeting: </label>
+      <input id="state" type="text" formControlName="board" class="form-control">
+    </div>
   </div>
-  <div class="form-group">
-    <label for="u_shape">U-Shape</label>
-    <input type="number" class="form-control" formControlName="uShapeCapacity" id="u_shape">
-  </div>
-  <div class="form-group">
-    <label for="board">Board Meeting</label>
-    <input type="number" class="form-control" formControlName="boardCapacity" id="board">
-  </div>
-  <!-- list the layout types here -->
-
-  <button type="submit" class="btn btn-primary">Save</button>
 </form>

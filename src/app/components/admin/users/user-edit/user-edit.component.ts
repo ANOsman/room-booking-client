@@ -24,27 +24,28 @@ export class UserEditComponent implements OnInit {
   dataChangedEvent = new EventEmitter<boolean>();
 
   constructor(private route: ActivatedRoute, private dataService: DataService,
-                private formBuilder: FormBuilder, private router: Router, 
-                private dataChangeService: DataChangeService) {
-        
-                  this.userForm = this.formBuilder.group(
-                    {
-                      name: ['', Validators.required],
-                      id: ['', Validators.required]
-              
-                    }
-                  )
+    private formBuilder: FormBuilder, private router: Router,
+    private dataChangeService: DataChangeService) {
+
+    this.userForm = this.formBuilder.group(
+      {
+        name: ['', Validators.required],
+        id: [''],
+        password: ['']
+
+      }
+    )
 
   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      if(params['user_id']) {
+      if (params['user_id']) {
         this.dataService.getUser(+params['user_id']).subscribe(data => {
           this.user = data;
           this.userForm.setValue(data);
-      });
-    }
+        });
+      }
     });
 
 
@@ -53,7 +54,7 @@ export class UserEditComponent implements OnInit {
   updateUser() {
     this.message = 'Saving...'
     this.user.name = this.userForm.get('name')?.value;
-   
+
     this.dataService.updateUser(this.user).subscribe(
       next => {
         this.dataChangeService.userDataChangedEvent.emit(this.user);

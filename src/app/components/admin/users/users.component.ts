@@ -13,7 +13,7 @@ import { FormResetService } from 'src/app/services/form-reset.service';
 export class UsersComponent implements OnInit {
 
   users!: Array<User>;
-  user = new User();
+  user: User | undefined;
   message = 'Loading data - please wait'
   loadingData = true;
 
@@ -33,9 +33,6 @@ export class UsersComponent implements OnInit {
       next => {
         this.users = next;
         this.loadingData = false;
-      },
-      error => {
-        this.message = 'An error occured - please contact support!'
       }
     );
   }

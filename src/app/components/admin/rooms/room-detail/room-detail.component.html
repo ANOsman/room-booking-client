@@ -1,7 +1,7 @@
 <div class="roomDetails" *ngIf="room">
   <h2>Room details</h2>
   <a class="btn btn-small btn-warning" [routerLink]="['/admin','rooms','edit',room.id]">edit</a>
-  <a class="btn btn-small btn-warning" (click)="deleteRoom(room.id)">delete</a>
+  <a class="btn btn-small btn-warning" (click)="deleteRoom(room.id!)">delete</a>
   <div class="bg-warning p-5" *ngIf="message">{{message}}</div>
   <table>
     <tr>
@@ -11,13 +11,16 @@
       <td>name</td><td>{{room.name}}</td>
     </tr>
     <tr>
-      <td>location</td><td>{{room.location}}</td>
+      <td><p class="lead pe-2">location</p></td><td><p class="lead">{{room.location}}</p></td>
     </tr>
   </table>
   <h4>This room can accomodate:</h4>
   <table>
-    <tr *ngFor="let lc of room.layoutCapacities; let i = index"> <!-- repeat the tr for each capacity -->
-      <td *ngIf="room.layoutCapacities[i].capacity !== 0">{{layoutValues[i]}}</td><td *ngIf="room.layoutCapacities[i].capacity !== 0">{{lc.capacity}}</td>
+    <tr *ngFor="let lc of room.layoutCapacity" [ngSwitch]="lc.layout"> <!-- repeat the tr for each capacity -->
+      <td *ngSwitchCase="'THEATER'">Theater</td>
+      <td *ngSwitchCase="'USHAPE'">U-Shape</td>
+      <td *ngSwitchCase="'BOARD'">Board</td>
+      <td>&nbsp;&nbsp;{{lc.capacity}}</td>
     </tr>
   </table>
 </div>

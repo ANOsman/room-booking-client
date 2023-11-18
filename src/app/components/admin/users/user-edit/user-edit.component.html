@@ -8,15 +8,15 @@
     <label for="name">Name</label>
     <input type="text" class="form-control" id="name" placeholder="user name"
       formControlName="name">
-    <div class="alert alert-danger" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.dirty
+    <!-- <div class="alert alert-danger" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.dirty
        && userForm.get('name')?.touched">
-      User name is required</div>
+      User name is required</div> -->
 
   </div>
 
   <div class="form-group" *ngIf="user?.id == null"> <!-- only show this field on adding a user -->
     <label for="password">Password</label>
-    <div class="alert alert-danger" *ngIf="userForm.controls['password']?.invalid && userForm.controls['password']?.dirty">Password cannot be blank</div>
+    <!-- <div class="alert alert-danger" *ngIf="userForm.controls['password']?.invalid && userForm.controls['password']?.dirty">Password cannot be blank</div> -->
   </div>
 
   <button type="submit" class="btn btn-primary">Save</button>

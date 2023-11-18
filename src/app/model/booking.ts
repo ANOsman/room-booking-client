@@ -18,35 +18,4 @@ export class Booking {
     return new Date(this.date);
   }
 
-  static fromJson(booking: Booking) {
-    const newBooking = new Booking();
-    newBooking.id = booking?.id;
-   /*  newBooking.room = Room.fromJson(booking?.room);
-    newBooking.user = User.fromJson(booking?.user); */
-    newBooking.layout = booking?.layout;
-    newBooking.title = booking?.title;
-    newBooking.date = booking?.date;
-    newBooking.startTime = booking?.startTime;
-    newBooking.endTime = booking?.endTime;
-    newBooking.participants = booking?.participants;
-    return newBooking
-}
-}
-
-export interface Bookings {
-  _embedded: {
-    bookings: [
-      {
-        id: number,
-        room: Room,
-        user: User,
-        title: string,
-        layout: Layout,
-        date: string,
-        startTime: string,
-        endTime: string,
-        participants: number
-      }
-    ]
-  }
 }

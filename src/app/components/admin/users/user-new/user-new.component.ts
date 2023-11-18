@@ -13,7 +13,7 @@ import { DataService } from 'src/app/services/data.service';
 export class UserNewComponent implements OnInit {
 
 userForm!: FormGroup;
-user = new User();
+user: User | undefined;
 password!: string;
 message!: string;
 
@@ -34,9 +34,9 @@ message!: string;
 
   saveUser() {
     this.message = 'Saving...'
-    this.user.name = this.userForm.value['name'];
+    this.user!.name = this.userForm.value['name'];
     this.password = this.userForm.value['password'];
-    this.dataService.addUser(this.user, this.password).subscribe(
+    this.dataService.addUser(this.user!, this.password).subscribe(
       next => {
         this.dataChangeService.userDataChangedEvent.emit();
         this.router.navigateByUrl('/admin/users/view/' + next.id)

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Layout, Room } from 'src/app/model/room';
+import { Layout, LayoutCapacity, Room } from 'src/app/model/room';
 import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 
@@ -11,22 +11,27 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class RoomDetailComponent implements OnInit {
 
-  room!: Room;
+  room: Room = new Room();
   layoutValues: any = Object.values(Layout);
   message!: string
 
   constructor(private dataService: DataService, private route: ActivatedRoute,
-    private router: Router, private dataChangeService: DataChangeService)
-  {}
+    private router: Router, private dataChangeService: DataChangeService) { }
 
   ngOnInit(): void {
      this.route.params.subscribe((params: Params) => {
-      this.dataService.getRoom(+params['room_id']).subscribe(r => {
-        this.room = r;
-        for(let lc of this.room.layoutCapacities) {
-          this.layoutValues.push(lc.layout);
-        }
+      this.dataService.getRoom(+params['room_id']).subscribe(rm => {
+        this.room.id = rm.id;
+        this.room.name = rm.name;
+        this.room.location = rm.location
       });
+
+      this.dataService.getLayoutCapacityFor(Number(params['room_id'])).subscribe(rm => {
+        this.room.layoutCapacity = new Array<LayoutCapacity>()
+        rm.forEach((lc: LayoutCapacity) => {
+          this.room.layoutCapacity.push(lc)
+        })
+      })
         
     })
   }
@@ -37,11 +42,7 @@ export class RoomDetailComponent implements OnInit {
       this.dataService.deleteRoom(id).subscribe( 
         next => {
           this.dataChangeService.roomDataChangedEvent.emit();
-      },
-        error => {
-          this.message = 'Sorry - this room cannot be deleted at this time.'
-        }
-      );
+      })
       this.router.navigate(['/admin', 'rooms']);
      }
   }

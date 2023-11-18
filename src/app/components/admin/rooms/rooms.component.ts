@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Room } from 'src/app/model/room';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of, switchMap } from 'rxjs';
+import { LayoutCapacity, Room } from 'src/app/model/room';
 import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 import { FormResetService } from 'src/app/services/form-reset.service';
@@ -12,39 +13,27 @@ import { FormResetService } from 'src/app/services/form-reset.service';
 })
 export class RoomsComponent implements OnInit{
 
-  rooms!: Array<Room>;
-  room = new Room();
+  rooms$: Observable<Array<Room>> | undefined;
+  room$: Observable<Room> | undefined;
+  rooms: Room[] | undefined
   loadingData = true;
   message = 'Please wait... getting the list of rooms'
   reloadAttempts = 0;
 
   constructor(private dataService: DataService,
           private formResetService: FormResetService, private router: Router,
-          private dataChangeService: DataChangeService) {}
+          private dataChangeService: DataChangeService,
+          private route: ActivatedRoute) {}
 
-  
-  loadData() {
-    this.dataService.getRooms().subscribe(
-      (next) => {
-        this.rooms = next;
-        this.loadingData = false;
-      }, (error) => {
-        this.reloadAttempts++;
-        if(this.reloadAttempts <= 10)
-          this.loadData();
-        else {
-          this.message = 'Sorry - something went wrong, please contact support'}
-    });
-  }
   ngOnInit(): void {
-   this.loadData();
-   this.dataChangeService.roomDataChangedEvent.subscribe(next =>{
-    this.loadData();
-   })
-  }
+    this.room$ = this.dataService.getRoom(1);
+    this.dataService.getRooms().subscribe(data => {
+      this.rooms = data
+    })
+  } 
 
   addRoom() {
-    this.formResetService.resetRoomFormEvent.emit(new Room());
+    this.formResetService.resetRoomFormEvent.emit();
     this.router.navigateByUrl('/admin/rooms/edit');
   }
 }
