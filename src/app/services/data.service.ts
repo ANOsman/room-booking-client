@@ -23,13 +23,28 @@ export class DataService {
 
    getRoom(id: number) : Observable<Room> {
     return this.http.get<Room>(environment.restUrl + '/rooms/' + id)
-    .pipe(map(data =>{
-      return Room.fromJson(data)
+    .pipe(map(data => {
+      const newRoom = new Room();
+      newRoom.id = data.id;
+      newRoom.name = data.name;
+      newRoom.location = data.location;
+      this.getRoomCapacities(data.id).subscribe(lcData => {
+        for(const lc of lcData._embedded.layoutCapacities) {
+          newRoom.layoutCapacities.push(lc);
+        }
+      })
+      return newRoom;
     }));
    }
 
+   getRoomCapacities(roomId: number) : Observable<any>{
+    return this.http.get<any>(`${environment.restUrl}/rooms/${roomId}capacities`)
+    .pipe(map(data => data._embedded.layoutCapacities))
+   }
+
    getUsers() : Observable<User[]>{
-    return this.http.get<Users>(environment.restUrl + '/users').pipe(map (data=>{
+    return this.http.get<Users>(environment.restUrl + '/users')
+    .pipe(map (data=>{
       const users = new Array<User>();
       for(let user of data._embedded.users) {
         users.push(User.fromJson(user));
@@ -42,8 +57,18 @@ export class DataService {
     return this.http.get<any>(environment.restUrl + '/rooms')
     .pipe(map(data => {
       const rooms = new Array<Room>();
+      const newRoom = new Room();
       for(const room of data._embedded.rooms) {
-        rooms.push(Room.fromJson(room));
+        newRoom.id = room.id;
+        newRoom.name = room.name;
+        newRoom.location = room.location;
+        this.getRoomCapacities(room.id).subscribe(data => {
+          for(const lc of data){
+            newRoom.layoutCapacities.push(lc);
+          }
+        });
+        //rooms.push(Room.fromJson(room));
+        rooms.push(newRoom);
       }
       return rooms;
       
@@ -54,14 +79,14 @@ export class DataService {
    updateRoom(room: Room) : Observable<Room> {
     return this.http.put<Room>(`${environment.restUrl}/rooms/${room.id}`, room)
     .pipe(map(data => {
-      return Room.fromJson(data)
+      return data
     }));
     }
 
   addRoom(newRoom: Room) : Observable<Room> {
     return this.http.post<Room>(`${environment.restUrl}/rooms`, newRoom)
     .pipe(map( data => {
-      return Room.fromJson(data)
+      return data
     }));
   }
 
@@ -90,10 +115,10 @@ export class DataService {
   }
 
   getBookings(date: string) : Observable<Booking[]> {
-    return this.http.get<any>(`${environment.url}/bookings/${date}`)
+    return this.http.get<any>(`${environment.restUrl}/bookings/search/getByDate?date=${date}`)
       .pipe(map( data => {
         const bookings = new Array<Booking>();
-        for(const booking of data) {
+        for(const booking of data._embedded.bookings) {
 
         let fullBooking = Booking.fromJson(booking);
         this.getRoomWithBooking(booking.id).subscribe(data => fullBooking.room = data)
@@ -107,7 +132,7 @@ export class DataService {
   getRoomWithBooking(id: number) : Observable<Room>{
     return this.http.get<Room>(`${environment.restUrl}/bookings/${id}/room`)
       .pipe(map(data =>{
-        return Room.fromJson(data)
+        return data
       }))
   }
 
