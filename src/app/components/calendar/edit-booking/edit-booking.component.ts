@@ -1,5 +1,6 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { Booking } from 'src/app/model/booking';
@@ -14,7 +15,8 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class EditBookingComponent implements OnInit {
 
-  booking!: Booking;
+  bookingForm: FormGroup | undefined;
+  booking: Booking = new Booking();
   users!: User[];
   rooms!: Room[];
   layouts = Object.values(Layout);
@@ -24,36 +26,32 @@ export class EditBookingComponent implements OnInit {
   message = 'Loading data... please wait.'
 
   constructor(private dataService: DataService, private route: ActivatedRoute,
-                private router: Router) {}
+                private router: Router) { }
 
   ngOnInit(): void {
+    this.loadData()
     this.rooms = this.route.snapshot.data['rooms']
     this.users = this.route.snapshot.data['users']
-
-    this.loadData()
+    // this.dataService.getRooms().subscribe(data => this.rooms = data);
+    // this.dataService.getUsers().subscribe(data => this.users = data);
+    
+    console.log('this.rooms = ', this.rooms);
+    console.log('this.users = ', this.users);
+    console.log('this.booking = ', this.booking);
   }
 
-  loadData(){
-    /*  this.dataService.getRooms().subscribe( 
-      resp =>{ 
-        this.rooms = resp
-      });
+  loadData() {
 
-    this.dataService.getUsers().subscribe(
-      resp => {
-        this.users = resp
-      }); 
- */
-    this.route.params.subscribe((params: Params) => {
-      const id = +params['booking_id'];
+    const id = this.route.snapshot.queryParams['id'];
+      console.log('id = ', id);
       if(id) {
         this.dataService.getBooking(id).subscribe(
           next => {
+            
           this.booking = next
           this.dataLoaded = true
           this.message = ''
-        }, error => {
-          this.message = 'Sorry, something went wrong'
+          console.log('this.booking = ', this.booking)
         })
       }
       else {
@@ -61,81 +59,31 @@ export class EditBookingComponent implements OnInit {
         this.dataLoaded = true;
         this.message = ''
       }
-    });
-
   }
+  // onSubmmit() {
+  //   if (this.booking.id != null) {
+  //     this.dataService.saveBooking(this.booking).subscribe(
+  //       next => this.router.navigate(['']),
+  //       error => this.message = 'something went wrong : the booking wasn\'t saved.'
+  //     );
+  //   } else {
+  //     this.dataService.addBooking(this.booking).subscribe(
+  //       next => this.router.navigate(['']),
+  //       error => this.message = 'something went wrong : the booking wasn\'t saved.'
+  //     );
+  //   }
+  // }
 
   saveBooking() {
+    console.log('new booking = ', this.booking);
     if(this.booking.id == null) {
-      this.dataService.addBooking(this.booking).subscribe(
-        next => this.router.navigate(['/'])
-      );
+      console.log('adding a booking');
+      this.dataService.addBooking(this.booking)
     }
     else {
-      this.dataService.updateBooking(this.booking).subscribe(
-        next => this.router.navigate(['/'])
-      );
-    } 
-    console.log("Saved booking: ",this.booking);
+      console.log('updating a booking')
+      this.dataService.updateBooking(this.booking);
+    }
   }
 
 } 
-
-/* export class EditBookingComponent implements OnInit {
-
-  booking!: Booking;
-  rooms!: Array<Room>;
-  layouts = Object.keys(Layout);
-  layoutEnum = Layout;
-  users!: Array<User>;
-
-  dataLoaded = false;
-  message = 'Please wait...';
-
-  constructor(private dataService: DataService,
-              private route: ActivatedRoute,
-              private router: Router) { }
-
-  ngOnInit() {
-    this.rooms = this.route.snapshot.data['rooms'];
-    this.users = this.route.snapshot.data['users'];
-
-    const id = this.route.snapshot.queryParams['id'];
-    if (id) {
-      this.dataService.getBooking(+id)
-        .pipe(
-          map(booking => {
-            booking.room = this.rooms.find (room => room.id === booking.room.id)!;
-            booking.user = this.users.find (user => user.id === booking.user.id)!;
-            return booking;
-          })
-        )
-        .subscribe(
-        next => {
-          this.booking = next;
-          this.dataLoaded = true;
-          this.message = '';
-        }
-      );
-    } else {
-      this.booking = new Booking();
-      this.dataLoaded = true;
-      this.message = '';
-    }
-  }
-
-  onSubmit() {
-    if (this.booking.id != null) {
-      this.dataService.saveBooking(this.booking).subscribe(
-        next => this.router.navigate(['']),
-        error => this.message = 'something went wrong : the booking wasn\'t saved.'
-      );
-    } else {
-      this.dataService.addBooking(this.booking).subscribe(
-        next => this.router.navigate(['']),
-        error => this.message = 'something went wrong : the booking wasn\'t saved.'
-      );
-    }
-  }
-
-} */

@@ -19,6 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { RouteGuardService } from './services/route-guard.service';
 import { roomResolver, roomsResolver } from './components/admin/rooms/rooms-resolver';
+import { RoomCreateComponent } from './components/admin/rooms/room-create/room-create.component';
+import { usersResolver } from './components/admin/users.resolver';
 
 
 const routes: Routes = [
@@ -34,6 +36,7 @@ const routes: Routes = [
       rooms: roomsResolver
     },
     children: [
+      { path: 'add', component: RoomCreateComponent },
       { path: 'view/:room_id', component: RoomDetailComponent },
       { 
         path: 'edit/:room_id',
@@ -41,11 +44,11 @@ const routes: Routes = [
       }
     ]
   },
-  { path: '', component: CalendarComponent},
-  { path: 'editBooking/:booking_id', component: EditBookingComponent },
-  { path: 'addBooking', component: EditBookingComponent },
+  { path: '', component: CalendarComponent },
+  { path: 'editBooking', component: EditBookingComponent, resolve: { rooms: roomsResolver, users: usersResolver } },
+  { path: 'addBooking', component: EditBookingComponent, resolve: { users: usersResolver, rooms: roomsResolver } },
   { path: '404', component: PageNotFoundComponent },
-  { path: 'login', component: LoginComponent},
+  { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '/404' }
 ]
 
@@ -61,6 +64,7 @@ const routes: Routes = [
     UserDetailComponent,
     UserEditComponent,
     RoomEditComponent,
+    RoomCreateComponent,
     UserNewComponent,
     EditBookingComponent,
     LoginComponent

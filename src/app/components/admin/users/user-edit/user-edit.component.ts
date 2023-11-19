@@ -35,7 +35,6 @@ export class UserEditComponent implements OnInit {
 
       }
     )
-
   }
 
   ngOnInit(): void {
@@ -47,22 +46,21 @@ export class UserEditComponent implements OnInit {
         });
       }
     });
-
-
   }
 
+  addUser() {
+    const myuser: User = new User();
+    myuser.name =  'matt';
+    this.dataService.addUser(myuser, '1234').subscribe();
+    this.router.navigate(['admin', 'users', 'view', this.user.id])
+  }
   updateUser() {
-    this.message = 'Saving...'
     this.user.name = this.userForm.get('name')?.value;
-
-    this.dataService.updateUser(this.user).subscribe(
-      next => {
-        this.dataChangeService.userDataChangedEvent.emit(this.user);
-        this.router.navigateByUrl(`/admin/users/view/${this.user.id}`)
-      }, error => {
-        this.message = 'Something went wrong and the data wasn\'t saved. You may want to try again.'
-      }
-    );
+    this.dataService.updateUser(this.user).subscribe(data => {
+      this.dataChangeService.userDataChanged.emit();
+      this.router.navigate(['admin', 'users', 'view', this.user.id])
+    });
+   
   }
 }
 

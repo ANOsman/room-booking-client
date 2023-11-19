@@ -5,8 +5,9 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class DataChangeService {
 
-  userDataChangedEvent = new EventEmitter<any>();
-  roomDataChangedEvent = new EventEmitter<any>();
+  userDataChanged = new EventEmitter<any>();
+  roomDataChanged = new EventEmitter<any>();
 
-  constructor(){}
+  constructor(){ }
+  
 }

@@ -13,15 +13,56 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class CalendarComponent implements OnInit {
 
-  user: User | undefined;
-  room: Room = new Room();
-  rooms: Room[] | undefined
+  bookings: Booking[] = new Array<Booking>();
+  message = '';
+  dataLoaded = false;
+  selectedDate: string | undefined;
+  isAdminUser = true;
 
   constructor(private dataService: DataService, private router: Router,
-                private route: ActivatedRoute) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    
+    this.loadData();
+  }
+
+  loadData() {
+    this.message = 'Loading data...';
+    this.route.queryParams.subscribe(
+      params => {
+        this.selectedDate = params['date'];
+        if (!this.selectedDate) {
+          this.selectedDate = formatDate(new Date(), 'yyyy-MM-dd', 'en-ZA');
+        }
+        this.dataService.getBookingsByDate(this.selectedDate).subscribe(
+          next => {
+            this.bookings = next;
+            this.dataLoaded = true;
+            this.message = '';
+          }
+        );
+      }
+    );
+  }
+
+  deleteBooking(id: number) {
+    const result = confirm('Are you sure you want to delete this booking?')
+    if(result) {
+      this.dataService.deleteBooking(id).subscribe(() => {
+        this.loadData();
+      })
+    }
+  }
+
+  editBooking(id: number) {
+    this.router.navigate(['editBooking'], {queryParams: {id}})
+  }
+  addBooking() {
+    //throw new Error('Method not implemented.');
+  }
+ 
+  dateChanged() {
+    this.router.navigate([''], {queryParams: {date: this.selectedDate}}) 
   }
 
 }

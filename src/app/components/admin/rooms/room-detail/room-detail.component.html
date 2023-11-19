@@ -1,26 +1,24 @@
-<div class="roomDetails" *ngIf="room">
+<div *ngIf="room">
   <h2>Room details</h2>
-  <a class="btn btn-small btn-warning" [routerLink]="['/admin','rooms','edit',room.id]">edit</a>
+  <a class="btn btn-small btn-warning" [routerLink]="['/admin','rooms','edit', room.id]">edit</a>
   <a class="btn btn-small btn-warning" (click)="deleteRoom(room.id!)">delete</a>
   <div class="bg-warning p-5" *ngIf="message">{{message}}</div>
   <table>
     <tr>
-      <td>id</td><td>{{room.id}}</td>
+      <td class="lead">id</td><td>{{room.id}}</td>
     </tr>
     <tr>
-      <td>name</td><td>{{room.name}}</td>
+      <td class="lead">name</td><td>{{room.name}}</td>
     </tr>
     <tr>
-      <td><p class="lead pe-2">location</p></td><td><p class="lead">{{room.location}}</p></td>
+      <td class="lead pe-3">location</td><td>{{room.location}}</td>
     </tr>
   </table>
   <h4>This room can accomodate:</h4>
   <table>
-    <tr *ngFor="let lc of room.layoutCapacity" [ngSwitch]="lc.layout"> <!-- repeat the tr for each capacity -->
-      <td *ngSwitchCase="'THEATER'">Theater</td>
-      <td *ngSwitchCase="'USHAPE'">U-Shape</td>
-      <td *ngSwitchCase="'BOARD'">Board</td>
-      <td>&nbsp;&nbsp;{{lc.capacity}}</td>
+    <tr *ngFor="let lc of room.layoutCapacity"> <!-- repeat the tr for each capacity -->
+      <td>{{lc.layout}}</td>
+      <td class="ps-3">{{lc.capacity}}</td>
     </tr>
   </table>
 </div>

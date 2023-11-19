@@ -38,7 +38,7 @@ message!: string;
     this.password = this.userForm.value['password'];
     this.dataService.addUser(this.user!, this.password).subscribe(
       next => {
-        this.dataChangeService.userDataChangedEvent.emit();
+        this.dataChangeService.userDataChanged.emit();
         this.router.navigateByUrl('/admin/users/view/' + next.id)
       },
       error => {

@@ -24,24 +24,16 @@ export class RoomDetailComponent implements OnInit {
         this.room.id = rm.id;
         this.room.name = rm.name;
         this.room.location = rm.location
+        this.room.layoutCapacity = rm.layoutCapacity
       });
-
-      this.dataService.getLayoutCapacityFor(Number(params['room_id'])).subscribe(rm => {
-        this.room.layoutCapacity = new Array<LayoutCapacity>()
-        rm.forEach((lc: LayoutCapacity) => {
-          this.room.layoutCapacity.push(lc)
-        })
-      })
-        
     })
   }
 
   deleteRoom(id: number) {
     const result = confirm('Are you sure you want to delete this room?')
     if(result) {
-      this.dataService.deleteRoom(id).subscribe( 
-        next => {
-          this.dataChangeService.roomDataChangedEvent.emit();
+      this.dataService.deleteRoom(id).subscribe( () => {
+          this.dataChangeService.roomDataChanged.emit();
       })
       this.router.navigate(['/admin', 'rooms']);
      }

@@ -2,9 +2,9 @@
 <div class="bg-warning p-5" *ngIf="message">{{message}}</div>
 
 
-<form (ngSubmit)="saveBooking()" *ngIf="(dataLoaded && users != null && rooms != null)">
+<form>
   <div class="container-lg">
-  <h1>{{booking.id == null ? 'Add' : 'Edit'}} Booking</h1>
+  <h1>{{booking.id! == null ? 'Add' : 'Edit'}} Booking</h1>
   <div class="row">
     <div class="form-group col-4">
       <label for="date">Date</label>
@@ -24,7 +24,6 @@
   </div>
 
   <div class="row">
-
     <div class="form-group col-5">
       <label for="room">Room</label>
       <select class="form-control" id="room" [(ngModel)]="booking.room" name="room">
@@ -35,7 +34,7 @@
 
     <div class="form-group col-5">
       <label for="layout">Layout</label>
-      <select class="form-control" id="layout" [(ngModel)]="booking.layout" name="layout">
+      <select class="form-control" id="layout" name="layout" [(ngModel)]="booking.layout">
         <!-- repeat the option for each layout -->
         <option *ngFor="let layout of layouts" [ngValue]="layout">{{layout}}</option>
       </select>
@@ -65,7 +64,7 @@
 
   <div class="row">
     <div class="col">
-      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-primary" (click)="saveBooking()">Save</button>
     </div>
   </div>
 </div>

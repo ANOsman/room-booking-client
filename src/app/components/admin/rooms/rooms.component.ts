@@ -27,10 +27,15 @@ export class RoomsComponent implements OnInit{
 
   ngOnInit(): void {
     this.room$ = this.dataService.getRoom(1);
+    this.loadRooms();
+    this.dataChangeService.roomDataChanged.subscribe(() => this.loadRooms());
+  }
+  
+  loadRooms() {
     this.dataService.getRooms().subscribe(data => {
-      this.rooms = data
+      this.rooms = data;
     })
-  } 
+  }
 
   addRoom() {
     this.formResetService.resetRoomFormEvent.emit();

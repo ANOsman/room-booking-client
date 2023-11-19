@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
    this.loadData();
-   this.dataChangeService.userDataChangedEvent.subscribe( next => {
+   this.dataChangeService.userDataChanged.subscribe( () => {
     this.loadData();
    })
   }

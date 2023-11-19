@@ -1,6 +1,6 @@
 import { getLocaleExtraDayPeriodRules } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Layout, LayoutCapacity, Room } from 'src/app/model/room';
@@ -15,48 +15,49 @@ import { FormResetService } from 'src/app/services/form-reset.service';
 })
 export class RoomEditComponent implements OnInit {
 
-    room: Room = new Room()
-    roomForm: FormGroup;
+    room: Room = new Room();
+    updatedRoom:Room = new Room();
+    roomForm = new FormGroup({
+      name: new FormControl(''),
+      location: new FormControl(''),
+      layoutCapacity: new FormArray<FormControl<number>>([])
+    })
+    
     constructor(private dataService: DataService, private route: ActivatedRoute,
       private formBuilder: FormBuilder, private dataChangeService: DataChangeService,
-      private router: Router) {
-        this.roomForm = this.formBuilder.group({
-          name: [''],
-          location: [''],
-          layout: this.formBuilder.group({
-            theater: [''],
-            uShape: [''],
-            board: ['']
-          }),
-        });
-      
-    }
+      private router: Router) { }
 
     ngOnInit(): void {
       this.route.params.subscribe(params => {
         const id = Number(params['room_id']);
+
         this.dataService.getRoom(id).subscribe(data => {
-          this.room!.name = data.name
-          this.room!.location = data.location
-        })
-        this.dataService.getLayoutCapacityFor(id).subscribe(data => {
-          this.room.layoutCapacity = new Array<LayoutCapacity>()
-          data.forEach((lc: LayoutCapacity) => {;
-            this.room.layoutCapacity.push(lc)
+          this.room = data;
+          this.roomForm?.get('name')?.setValue(data.name);
+          this.roomForm?.get('location')?.setValue(data.location);
+          data.layoutCapacity.forEach((lc: LayoutCapacity) => {
+            this.roomForm?.controls.layoutCapacity.push(new FormControl(lc.capacity!, {nonNullable: true}));
           })
-          this.roomForm.setValue({
-            name: this.room.name,
-            location: this.room.location,
-            layout: {
-              theater: this.room.layoutCapacity[0].capacity,
-              uShape: this.room.layoutCapacity[1].capacity,
-              board: this.room.layoutCapacity[2].capacity,
-            }
-          
-          })
-        })
+        });
       })
     }
+
+    editRoom() {
+      this.room.name = this.roomForm.get('name')?.value!;
+      this.room.location = this.roomForm.get('location')?.value!;
+      let index = 0
+      this.roomForm.controls.layoutCapacity.controls.forEach(control => {
+        this.room.layoutCapacity[index].capacity = control.value;
+        index++;
+      })
+      this.dataService.updateRoom(this.room).subscribe((data) => {
+        this.dataChangeService.roomDataChanged.emit();
+        this.router.navigate(['admin', 'rooms'])
+      })
+      console.log('this.room = ', this.room);
+      
+    }
+
 }
 
 
