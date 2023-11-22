@@ -13,7 +13,6 @@ import { UserDetailComponent } from './components/admin/users/user-detail/user-d
 import { UserEditComponent } from './components/admin/users/user-edit/user-edit.component';
 import { RoomEditComponent } from './components/admin/rooms/room-edit/room-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserNewComponent } from './components/admin/users/user-new/user-new.component';
 import { EditBookingComponent } from './components/calendar/edit-booking/edit-booking.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
@@ -21,6 +20,7 @@ import { RouteGuardService } from './services/route-guard.service';
 import { roomResolver, roomsResolver } from './components/admin/rooms/rooms-resolver';
 import { RoomCreateComponent } from './components/admin/rooms/room-create/room-create.component';
 import { usersResolver } from './components/admin/users.resolver';
+import { UserCreateComponent } from './components/admin/users/user-create/user-create.component';
 
 
 const routes: Routes = [
@@ -28,7 +28,7 @@ const routes: Routes = [
     children: [
       { path: 'view/:user_id', component: UserDetailComponent },
       { path: 'edit/:user_id', component: UserEditComponent },
-      { path: 'add', component: UserNewComponent }
+      { path: 'add', component: UserCreateComponent }
     ]
   },
   { path: 'admin/rooms', component: RoomsComponent,
@@ -65,7 +65,7 @@ const routes: Routes = [
     UserEditComponent,
     RoomEditComponent,
     RoomCreateComponent,
-    UserNewComponent,
+    UserCreateComponent,
     EditBookingComponent,
     LoginComponent
   ],

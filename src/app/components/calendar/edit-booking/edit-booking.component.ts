@@ -78,11 +78,13 @@ export class EditBookingComponent implements OnInit {
     console.log('new booking = ', this.booking);
     if(this.booking.id == null) {
       console.log('adding a booking');
-      this.dataService.addBooking(this.booking)
+      this.dataService.addBooking(this.booking).subscribe(() => {
+        this.router.navigate([''])
+      })
     }
     else {
       console.log('updating a booking')
-      this.dataService.updateBooking(this.booking);
+      this.dataService.updateBooking(this.booking).subscribe(() => this.router.navigateByUrl(''));
     }
   }
 

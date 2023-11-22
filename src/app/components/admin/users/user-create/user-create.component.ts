@@ -6,11 +6,11 @@ import { DataChangeService } from 'src/app/services/data-change.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
-  selector: 'app-user-new',
-  templateUrl: './user-new.component.html',
-  styleUrls: ['./user-new.component.css']
+  selector: 'app-user-create',
+  templateUrl: './user-create.component.html',
+  styleUrls: ['./user-create.component.css']
 })
-export class UserNewComponent implements OnInit {
+export class UserCreateComponent implements OnInit {
 
 userForm!: FormGroup;
 user: User | undefined;

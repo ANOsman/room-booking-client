@@ -13,15 +13,13 @@ import { FormResetService } from 'src/app/services/form-reset.service';
   styleUrls: ['./user-edit.component.css']
 })
 export class UserEditComponent implements OnInit {
+  [x: string]: any;
 
 
-  user!: User;
+  user: User = new User();
   userForm!: FormGroup;
   password!: string;
   message!: string
-
-  @Output()
-  dataChangedEvent = new EventEmitter<boolean>();
 
   constructor(private route: ActivatedRoute, private dataService: DataService,
     private formBuilder: FormBuilder, private router: Router,
@@ -39,21 +37,15 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      if (params['user_id']) {
+      if(params['user_id']) {
         this.dataService.getUser(+params['user_id']).subscribe(data => {
-          this.user = data;
+          this.user = this.dataService.convertToUser(data);
           this.userForm.setValue(data);
         });
       }
     });
   }
 
-  addUser() {
-    const myuser: User = new User();
-    myuser.name =  'matt';
-    this.dataService.addUser(myuser, '1234').subscribe();
-    this.router.navigate(['admin', 'users', 'view', this.user.id])
-  }
   updateUser() {
     this.user.name = this.userForm.get('name')?.value;
     this.dataService.updateUser(this.user).subscribe(data => {

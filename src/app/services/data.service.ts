@@ -29,11 +29,6 @@ export class DataService {
     return this.http.delete<any>(`${environment.restUrl}/bookings/${id}`);
   }
 
-  // createBooking(booking: Booking) {
-  //   return this.http.post<Booking>(`${environment.restUrl}/bookings`, booking).pipe(
-  //     map(data => this.convertToBooking(data))
-  //   );
-  // }
   updateBooking(booking: Booking): Observable<any> {
     return this.http.put<Booking>(`${environment.restUrl}/bookings/${booking.id}`, booking).pipe(
       map(data => this.convertToBooking(data))
@@ -63,21 +58,24 @@ export class DataService {
   }
 
   updateUser(user: User): Observable<User> {
-    return this.http.put<User>(`${environment.restUrl}/customUsers/${user.id}`, user).pipe(
-      map(data => this.convertToUser(data))
-    )
+    return this.http.put<User>(`${environment.restUrl}/customUsers/${user.id}`, user)
+    // .pipe(
+    //   map(data => this.convertToUser(data))
+    // )
   }
 
  getUsers(): Observable<User[]> {
-  return this.http.get<any>(`${environment.restUrl}/customUsers`).pipe(
-    map(data => data._embedded.customUsers.map((u: User) => this.convertToUser(u)))
-  )
+  return this.http.get<any>(`${environment.restUrl}/customUsers`)
+  // .pipe(
+  //   map(data => data._embedded.customUsers.map((u: any) => this.convertToUser(u)))
+  // )
  }
 
   getUser(id: number): Observable<User> {
-    return this.http.get<User>(`${environment.restUrl}/customUsers/${id}`).pipe(
-      map(data => this.convertToUser(data))
-    )
+    return this.http.get<User>(`${environment.restUrl}/customUsers/${id}`)
+    // .pipe(
+    //   map(data => this.convertToUser(data))
+    // )
   }
 
   resetUserPassword(id: number): Observable<any> {
@@ -85,7 +83,7 @@ export class DataService {
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.delete<any>(`${environment.restUrl}/users/${id}`);
+    return this.http.delete<any>(`${environment.restUrl}/customUsers/${id}`);
   }
 
   addRoom(newRoom: Room): Observable<any> {

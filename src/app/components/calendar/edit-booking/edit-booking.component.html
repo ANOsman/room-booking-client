@@ -1,7 +1,6 @@
 
 <div class="bg-warning p-5" *ngIf="message">{{message}}</div>
 
-
 <form>
   <div class="container-lg">
   <h1>{{booking.id! == null ? 'Add' : 'Edit'}} Booking</h1>
@@ -20,7 +19,6 @@
       <label for="endTime">End time</label>
       <input type="time" class="form-control" id="endTime" name="endTime" [(ngModel)]="booking.endTime">
     </div>
-
   </div>
 
   <div class="row">
@@ -44,7 +42,6 @@
       <label for="participants">Participants</label>
       <input type="number" class="form-control" id="participants" [(ngModel)]="booking.participants" name="participants">
     </div>
-
   </div>
 
   <div class="row">

@@ -12,7 +12,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let user of users"> <!-- repeat this tr for each user -->
+        <tr *ngFor="let user of users" class="data"> <!-- repeat this tr for each user -->
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
           <td><button type="button" class="btn btn-primary" [routerLink]="['view', user.id]">view</button></td>
