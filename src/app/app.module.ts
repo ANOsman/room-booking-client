@@ -15,23 +15,32 @@ import { RoomEditComponent } from './components/admin/rooms/room-edit/room-edit.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditBookingComponent } from './components/calendar/edit-booking/edit-booking.component';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './login/login.component';
-import { RouteGuardService } from './services/route-guard.service';
 import { roomResolver, roomsResolver } from './components/admin/rooms/rooms-resolver';
 import { RoomCreateComponent } from './components/admin/rooms/room-create/room-create.component';
 import { usersResolver } from './components/admin/users.resolver';
 import { UserCreateComponent } from './components/admin/users/user-create/user-create.component';
+import { authGuard } from './auth/auth.guard';
+import { AuthComponent } from './auth/auth/auth.component';
+import { AuthModule } from './auth/auth.module';
 
 
 const routes: Routes = [
-  { path: 'admin/users', component: UsersComponent,
+  {
+    path: 'login',
+    component: AuthComponent
+  },
+  { 
+    path: 'admin/users', component: UsersComponent, 
+    canActivate: [ authGuard ],
     children: [
       { path: 'view/:user_id', component: UserDetailComponent },
       { path: 'edit/:user_id', component: UserEditComponent },
       { path: 'add', component: UserCreateComponent }
     ]
   },
-  { path: 'admin/rooms', component: RoomsComponent,
+  { 
+    path: 'admin/rooms', component: RoomsComponent, 
+    canActivate: [ authGuard ],
     resolve: {
       rooms: roomsResolver
     },
@@ -48,7 +57,6 @@ const routes: Routes = [
   { path: 'editBooking', component: EditBookingComponent, resolve: { rooms: roomsResolver, users: usersResolver } },
   { path: 'addBooking', component: EditBookingComponent, resolve: { users: usersResolver, rooms: roomsResolver } },
   { path: '404', component: PageNotFoundComponent },
-  { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '/404' }
 ]
 
@@ -67,7 +75,6 @@ const routes: Routes = [
     RoomCreateComponent,
     UserCreateComponent,
     EditBookingComponent,
-    LoginComponent
   ],
   imports: [
     FormsModule,
@@ -75,7 +82,8 @@ const routes: Routes = [
     RouterModule,
     BrowserModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
+    HttpClientModule,
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -2,7 +2,7 @@
 
 <div class="bg-warning p-5" *ngIf="message">{{message}}</div>
 
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
   <div class="form-group">
     <label for="name">Name</label>
@@ -14,7 +14,7 @@
     <input type="password" class="form-control" id="password" placeholder="password" formControlName="password" name="password">
   </div>
 
-  <button type="submit" class="btn btn-primary">Login</button>
+  <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
 
 </form>
 

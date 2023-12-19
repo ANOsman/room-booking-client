@@ -5,7 +5,7 @@ import { Observable, map, of } from 'rxjs';
 import { Booking } from '../model/booking';
 import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,12 @@ import { HttpClient } from '@angular/common/http';
 export class DataService {
 
   constructor(private http: HttpClient) { }
+
+  login(name: string, password: string): Observable<{result: string}> {
+    const authData = btoa(`${name}:${password}`);
+    const headers = new HttpHeaders().append('Authorization', 'Basic ' + authData);
+    return this.http.get<{result: string}>(environment.restUrl + "/basicAuth/validate", {headers: headers})
+  }
   
   getBookingsByDate(date: string): Observable<Booking[]> {
     return this.http.get<any>(`${environment.restUrl}/bookings/search/getBookingsByDate?date=${date}`)
