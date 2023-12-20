@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DataService } from '../services/data.service';
@@ -10,14 +10,22 @@ import { DataService } from '../services/data.service';
 export class AuthService {
 
   jwtToken = '';
+  authResultEvent = new EventEmitter<boolean>();
 
   constructor(private http: HttpClient, private dataService: DataService) { }
 
   authenticate(name: string, password: string) {
-    this.dataService.login(name, password).subscribe(
+    this.dataService.authenticateUser(name, password).subscribe(
       next => {
-        this.jwtToken = next.result;
-        console.log('token = ', this.jwtToken)
+        if(next) {
+          this.jwtToken = next.result;
+          this.authResultEvent.emit(true);
+          console.log('token = ', this.jwtToken)
+          console.log('next = ', next);
+        } else {
+          this.authResultEvent.emit(false);
+        }
+        
       }
     )
   }

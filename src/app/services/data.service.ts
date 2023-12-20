@@ -14,10 +14,10 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  login(name: string, password: string): Observable<{result: string}> {
+  authenticateUser(name: string, password: string): Observable<{result: string}> {
     const authData = btoa(`${name}:${password}`);
-    const headers = new HttpHeaders().append('Authorization', 'Basic ' + authData);
-    return this.http.get<{result: string}>(environment.restUrl + "/basicAuth/validate", {headers: headers})
+    const options = { headers: new HttpHeaders({Authorization: `Basic ${authData}`}) }
+    return this.http.get<{result: string}>(environment.restUrl + "/basicAuth/validate", options);
   }
   
   getBookingsByDate(date: string): Observable<Booking[]> {

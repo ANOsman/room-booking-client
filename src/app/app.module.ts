@@ -14,7 +14,7 @@ import { UserEditComponent } from './components/admin/users/user-edit/user-edit.
 import { RoomEditComponent } from './components/admin/rooms/room-edit/room-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditBookingComponent } from './components/calendar/edit-booking/edit-booking.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { roomResolver, roomsResolver } from './components/admin/rooms/rooms-resolver';
 import { RoomCreateComponent } from './components/admin/rooms/room-create/room-create.component';
 import { usersResolver } from './components/admin/users.resolver';
@@ -22,6 +22,7 @@ import { UserCreateComponent } from './components/admin/users/user-create/user-c
 import { authGuard } from './auth/auth.guard';
 import { AuthComponent } from './auth/auth/auth.component';
 import { AuthModule } from './auth/auth.module';
+import { AuthInterceptor } from './auth.interceptor';
 
 
 const routes: Routes = [
@@ -85,7 +86,9 @@ const routes: Routes = [
     HttpClientModule,
     AuthModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
